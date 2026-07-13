@@ -15,6 +15,7 @@ services:
       MYSQL_DATABASE: polling_app
 
   pollingServer:
+    image: 893493035367.dkr.ecr.us-east-1.amazonaws.com/polling-app-server:latest
     build:
       context: ./polling-app-server
       dockerfile: Dockerfile
@@ -31,6 +32,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: callicoder
 
   pollingClient:
+    image: 893493035367.dkr.ecr.us-east-1.amazonaws.com/polling-app-client:latest
     build:
       context: ./polling-app-client
       dockerfile: Dockerfile
