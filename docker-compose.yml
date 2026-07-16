@@ -38,7 +38,7 @@ services:
       dockerfile: Dockerfile
       args:
         # Pass your EC2 public IP or localhost here so React can talk to the server port
-        - REACT_APP_API_BASE_URL=http://:8080/api
+        - REACT_APP_API_BASE_URL=/api
     ports: 
       - "80:80"
     networks:
