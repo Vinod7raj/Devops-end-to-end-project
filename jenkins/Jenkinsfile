@@ -1,0 +1,87 @@
+pipeline {
+    agent any
+    tools{
+        maven "MAVEN3.9"
+        jdk "JDK17"
+        
+    }
+
+    environment {
+        // Fetch the encrypted token from Jenkins credentials manager
+        SONAR_CREDENTIAL = credentials('token')
+        scannerHome = tool 'sonar8.0';
+        registryCredential = 'ecr:us-east-1:awscreds'
+        pollingserver = 'https://893493035367.dkr.ecr.us-east-1.amazonaws.com'
+
+    }
+
+    stages {
+        stage('fetch code'){
+            steps{
+                git branch: 'master',credentialsId: 'githubauth', url: 'https://github.com/Vinod7raj/Devops-end-to-end-project.git'
+            }
+        }
+
+       
+
+        stage('Build'){ 
+            steps{
+                dir('polling-app-server'){
+                    sh 'mvn install -DskipTests'
+                }
+            }
+            post{
+                success{
+                    echo "archiving artifact"
+                    archiveArtifacts artifacts: '**/*.jar'
+                }
+            }
+        }
+
+        
+
+        stage('SonarQube Analysis - Java Backend') {
+            steps {
+                dir('polling-app-server') { // Navigate to backend directory
+                    sh '''mvn clean verify sonar:sonar \
+                        -Dsonar.projectKey=vprofileapp \
+                        -Dsonar.host.url=http://3.94.127.235:80 \
+                        -Dsonar.token=${SONAR_CREDENTIAL} \
+                        -DskipTests=true'''
+                }
+            }
+        }
+        
+        stage('SonarQube Analysis - React Frontend') {
+            steps {
+                dir('polling-app-client') { // Navigate to frontend directory
+                    // Run the Sonar CLI scanner for JavaScript files
+                    sh '''${scannerHome}/bin/sonar-scanner \
+                        -Dsonar.projectKey=vprofilefrontend \
+                        -Dsonar.host.url=http://3.94.127.235:80 \
+                        -Dsonar.token=${SONAR_CREDENTIAL}'''
+                }
+            }
+
+         
+    }
+
+    stage('docker image build'){
+        steps{
+            sh "docker compose build"
+        }
+    }
+
+    stage('Upload to ecr'){
+        steps{
+            script{
+            docker.withRegistry(pollingserver, registryCredential){
+                sh "docker compose push pollingServer"
+                sh "docker compose push pollingClient"
+            }
+            }
+        }
+    }
+}
+
+}
