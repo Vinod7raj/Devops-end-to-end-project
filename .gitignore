@@ -1,1 +1,11 @@
+# Ignore Terraform files
+.terraform/
+**/providers/
+*.exe
+*.tfstate
+*.tfstate.backup
+crash.log
+
+# Ignore OS & IDE files
 .DS_Store
+.vscode/.DS_Store

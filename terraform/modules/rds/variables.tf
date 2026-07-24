@@ -4,7 +4,7 @@ variable "private_subnets" {
 }
 
 variable "db_sg_id" {
-  type        = list(string)
+  type        = string
   description = "Security group IDs for RDS instance"
 }
 
