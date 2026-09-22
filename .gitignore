@@ -1,11 +1,26 @@
-# Ignore Terraform files
-.terraform/
-**/providers/
-*.exe
+# --- Terraform ---
 *.tfstate
-*.tfstate.backup
+*.tfstate.*
+.terraform/
+*.tfvars
+!*.tfvars.example
 crash.log
+tfplan
 
-# Ignore OS & IDE files
+# --- Docker / env ---
+.env
+*.env
+
+# --- Node (polling-app-client) ---
+node_modules/
+build/
+dist/
+
+# --- Java (polling-app-server) ---
+target/
+*.class
+
+# --- OS / editor junk ---
 .DS_Store
-.vscode/.DS_Store
+.idea/
+.vscode/

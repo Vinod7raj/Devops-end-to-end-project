@@ -90,8 +90,8 @@ resource "aws_route53_record" "pollingapp_alias" {
   type    = "A"
 
   alias {
-    name                   = var.polling_alb_dns_name
-    zone_id                = var.polling_alb_zone_id
+    name                   = module.alb.alb_dns_name
+    zone_id                = module.alb.alb_zone_id
     evaluate_target_health = true
   }
 }
