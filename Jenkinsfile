@@ -26,7 +26,7 @@ pipeline {
             steps {
                 dir('terraform') {
                     sh 'terraform init -input=false'
-                    sh 'terraform plan var-file=${TR_VAR_FILE} -out=tfplan'
+                    sh 'terraform plan -var-file=${TR_VAR_FILE} -out=tfplan'
                 }
             }
         }
@@ -42,7 +42,7 @@ pipeline {
                 // manual gate before touching real infra - remove input{} once you trust the pipeline
                 input message: 'Apply Terraform changes to AWS?'
                 dir('terraform') {
-                    sh 'terraform apply var-file=${TR_VAR_FILE} -input=false tfplan'
+                    sh 'terraform apply -var-file=${TR_VAR_FILE} -input=false tfplan'
                 }
             }
         }
