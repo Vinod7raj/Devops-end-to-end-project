@@ -18,7 +18,7 @@ type   = dvo.resource_record_type
        }
      }
 
-      zone_id = var.pollingapp_zone_id
+     zone_id = var.pollingapp_zone_id
      name    = each.value.name
      type    = each.value.type
      records = [each.value.record]
